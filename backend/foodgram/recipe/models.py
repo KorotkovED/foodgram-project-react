@@ -39,7 +39,8 @@ class Tags(models.Model):
                           verbose_name='HEX-код цвета',
                           blank=False)
     slug = models.SlugField(unique=True,
-                            blank=False)
+                            blank=False,
+                            verbose_name='Слаг/Slug')
 
     class Meta:
         verbose_name = 'тег'
@@ -72,7 +73,8 @@ class Recipe(models.Model):
         ),),
         verbose_name='Время приготовления'
     )
-    pub_date = models.DateTimeField(auto_now_add=True)
+    pub_date = models.DateTimeField(auto_now_add=True,
+                                    verbose_name='Дата публикации')
 
     class Meta:
         verbose_name = 'рецепт'

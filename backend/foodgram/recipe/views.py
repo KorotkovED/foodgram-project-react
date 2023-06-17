@@ -58,8 +58,7 @@ class RecipeViewSet(viewsets.ModelViewSet):
             request.user.shopping_user
         )
 
-    @action(
-            detail=True,
+    @action(detail=True,
             methods=['GET'],
             url_path='download_shopping_cart',
             permission_classes=[permissions.IsAuthenticated])

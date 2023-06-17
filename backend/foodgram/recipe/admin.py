@@ -55,14 +55,9 @@ class RecipeAdmin(admin.ModelAdmin):
         'id',
         'name',
         'author',
-        'in_favorite',
     )
     list_filter = ('name', 'author',)
-    readonly_fields = ('in_favorite',)
     inlines = (RecipeIngredientsInline,)
-
-    def in_favorite(self, obj):
-        return obj.in_favorite.all().count()
 
 
 @admin.register(FavoriteRecipe)

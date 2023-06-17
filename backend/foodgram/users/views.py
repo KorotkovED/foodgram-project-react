@@ -44,7 +44,6 @@ class SubListView(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = SubscribtionSerializer
     pagination_class = LimitPageNumerPagination
-    # filter_backends = (filters.SearchFilter,)
     permission_classes = (permissions.IsAuthenticated,)
     search_fields = ('^following__user')
 

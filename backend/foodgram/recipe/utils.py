@@ -1,19 +1,3 @@
-# from django.db.models import F, Sum
-# from .models import IngredientsInRecipe
-
-
-# def get_list_ingredients(user):
-#     """Cуммирование позиций из разных рецептов."""
-
-#     ingredients = IngredientsInRecipe.objects.filter(
-#         recipe__shopping_recipe__user=user).values(
-#         name=F('ingredient__name'),
-#         units=F('ingredient__unit')
-#     ).annotate(amount=Sum('amount')).values_list(
-#         'ingredient__name', 'amount', 'ingredient__units')
-#     return ingredients
-
-
 from django.http import HttpResponse
 from .models import ShoppingList
 

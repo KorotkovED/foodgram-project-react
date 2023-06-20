@@ -62,7 +62,6 @@ jobs:
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.SSH_KEY }}
-          stack_file_name: docker-compose.yaml
           script: |
             cd infra
             sudo docker pull korotkoved/foodgram_backend

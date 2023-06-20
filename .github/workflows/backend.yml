@@ -61,16 +61,17 @@ jobs:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
           key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.SSH_KEY }}
           stack_file_name: docker-compose.yaml
           script: |
             cd infra
             echo ${{ secrets.DOCKER_PASSWORD }} | sudo docker login -u ${{ secrets.DOCKER_USERNAME }} --password-stdin
             sudo docker pull korotkoved/foodgram_backend
-            sudo docker pull korotkovde/foodgram_frontend 
+            sudo docker pull korotkoved/foodgram_frontend 
             sudo docker-compose stop
             sudo docker-compose rm web
             touch .env
-            echo DJANGO_SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
+            echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env
             echo DB_ENGINE=${{ secrets.DB_ENGINE }} >> .env
             echo DB_NAME=${{ secrets.DB_NAME }} >> .env
             echo POSTGRES_USER=${{ secrets.POSTGRES_USER }} >> .env

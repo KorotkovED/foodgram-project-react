@@ -60,16 +60,16 @@ jobs:
         with:
           host: ${{ secrets.HOST }}
           username: ${{ secrets.SSH_USER }}
-          ssh: ${{ secrets.SSH_KEY }}
-          passphrase: ${{ secrets.PASSPHRASE}}
+          key: ${{ secrets.SSH_KEY }}
+          passphrase: ${{ secrets.PASSPHRASE }}
           script: |
             cd foodgram-project-react
             cd infra
             sudo docker pull korotkoved/foodgram_backend
             sudo docker pull korotkoved/foodgram_frontend 
-            sudo docker-compose down --volumes
-            sudo docker-compose stop
-            sudo docker-compose rm backend
+            sudo docker compose down --volumes
+            sudo docker compose stop
+            sudo docker compose rm backend
             rm .env
             touch .env
             echo SECRET_KEY=${{ secrets.SECRET_KEY }} >> .env

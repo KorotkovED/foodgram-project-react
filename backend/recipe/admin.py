@@ -22,11 +22,11 @@ class IngredientAdmin(admin.ModelAdmin):
     list_display = (
         'id',
         'name',
-        'units',
+        'measurement_unit',
         'get_recipes_count',
     )
     search_fields = ('name',)
-    ordering = ('units',)
+    ordering = ('measurement_unit',)
 
     def get_recipes_count(self, obj):
         return IngredientsInRecipe.objects.filter(ingredient=obj.id).count()

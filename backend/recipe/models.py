@@ -11,13 +11,13 @@ class Ingredients(models.Model):
     name = models.CharField(max_length=100,
                             verbose_name='Название',
                             blank=False)
-    units = models.CharField(max_length=25,
-                             verbose_name='Единицы измерения',
-                             blank=False)
+    measurement_unit = models.CharField(max_length=25,
+                                        verbose_name='Единицы измерения',
+                                        blank=False)
 
     class Meta:
         constraints = models.UniqueConstraint(
-            fields=['name', 'units'],
+            fields=['name', 'measurement_unit'],
             name='unique_ingredients',
         ),
         verbose_name = 'Ингредиент'

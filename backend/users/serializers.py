@@ -26,6 +26,7 @@ class CustomUserSerializer(UserSerializer):
             queryset=User.objects.all()
         )]
     )
+    is_subscribed = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
         model = User
@@ -34,7 +35,15 @@ class CustomUserSerializer(UserSerializer):
                   'username',
                   'first_name',
                   'last_name',
-                  'password']
+                  'is_subscribed']
+
+    def get_is_subscribed(self, obj):
+        """Проверка подписки пользователя на автора."""
+        request = self.context.get('request')
+        if not request or request.user.is_anonymous:
+            return False
+        return Subscribtion.objects.filter(user=self.context['request'].user,
+                                           author=obj).exists()
 
 
 class SubscribtionSerializer(serializers.ModelSerializer):

@@ -8,18 +8,18 @@ def get_shopping_list(request):
     for item in shopping_cart:
         for recipe_ingredient in item.recipe.iir.all():
             name = recipe_ingredient.ingredient.name
-            units = recipe_ingredient.ingredient.units
+            measurement_unit = recipe_ingredient.ingredient.measurement_unit
             amount = recipe_ingredient.amount
             if name not in shopping_list:
                 shopping_list[name] = {
                     'name': name,
-                    'units': units,
+                    'measurement_unit': measurement_unit,
                     'amount': amount
                 }
             else:
                 shopping_list[name]['amount'] += amount
     content = (
-        [f'{item["name"]} ({item["units"]}) '
+        [f'{item["name"]} ({item["measurement_unit"]}) '
          f'- {item["amount"]}\n'
          for item in shopping_list.values()]
     )

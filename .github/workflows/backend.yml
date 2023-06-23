@@ -65,7 +65,7 @@ jobs:
           script: |
             sudo docker pull korotkoved/backend:v4
             sudo docker pull korotkoved/foodgram_frontend:v1
-            sudo docker-compose down --volumes
+            sudo docker-compose down -v
             sudo docker-compose stop
             sudo docker-compose rm backend
             rm .env

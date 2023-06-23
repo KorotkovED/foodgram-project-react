@@ -18,10 +18,10 @@ git clone https://github.com/KorotkovED/foodgram-project-react
 2) Создать файл ```.env``` в папке проекта _/infra/_ и заполнить его всеми ключами:
 ```
 DB_ENGINE=django.db.backends.postgresql
-DB_NAME=foodgram
-POSTGRES_USER=foodgram_user
-POSTGRES_PASSWORD=foodgram1
-DB_HOST=127.0.0.1
+DB_NAME=postgres
+POSTGRES_USER=postgres
+POSTGRES_PASSWORD=postgres
+DB_HOST=db
 DB_PORT=5432 
 DJANGO_SECRET_KEY=<ваш_django_секретный_ключ>
 ```
@@ -42,16 +42,17 @@ docker-compose up -d --build
 
 4) Сделать миграции, собрать статику и создать суперпользователя:
 ```python
-docker-compose exec -T web python manage.py makemigrations users --noinput
-docker-compose exec -T web python manage.py makemigrations recipes --noinput
+docker-compose exec backend python manage.py makemigrations
+docker-compose exec backend python manage.py migrate
 docker-compose exec -T web python manage.py migrate --noinput
-docker-compose exec -T web python manage.py collectstatic --no-input
+docker-compose exec backend python manage.py collectstatic
 docker-compose exec web python manage.py createsuperuser
 ```
 
-Чтобы заполнить базу данных начальными данными списка ингридиетов выполните:
+Чтобы заполнить базу данных начальными данными списка ингридиетов, а также тегами выполните:
 ```python
-docker-compose exec -T web python manage.py loaddata data/ingredients_1.json 
+docker-compose exec backend python manage.py load_ingredients
+docker-compose exec backend python manage.py load_tags
 ```
 Теперь можно зайти в админку _http://<ваш хост>/admin/_ под вашим логином администратора.
 
@@ -147,6 +148,12 @@ docker-compose exec -T web python manage.py loaddata data/ingredients_1.json
 ## Фильтрация по тегам
 При нажатии на название тега выводится список рецептов, отмеченных этим тегом. Фильтрация может проводится по нескольким тегам в комбинации «или»: если выбраны несколько тегов — в результате должны быть показаны рецепты, которые отмечены хотя бы одним из этих тегов.
 При фильтрации на странице пользователя фильтруются только рецепты выбранного пользователя. Такой же принцип соблюдается при фильтрации списка избранного.
+
+## Сайт
+```python
+http://51.250.65.73
+```
+
 
 ### Об авторе
 Проект выполнил Коротков Егор<br />

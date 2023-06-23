@@ -37,22 +37,21 @@ get_random_secret_key()
 3) Собрать контейнеры:
 ```python
 cd foodgram-project-react/infra
-docker-compose up -d --build
+sudo docker-compose up -d --build
 ```
 
 4) Сделать миграции, собрать статику и создать суперпользователя:
 ```python
-docker-compose exec backend python manage.py makemigrations
-docker-compose exec backend python manage.py migrate
-docker-compose exec -T web python manage.py migrate --noinput
-docker-compose exec backend python manage.py collectstatic
-docker-compose exec web python manage.py createsuperuser
+sudo docker-compose exec backend python manage.py makemigrations
+sudo docker-compose exec backend python manage.py migrate
+sudo docker-compose exec backend python manage.py collectstatic
+sudo docker-compose exec backend python manage.py createsuperuser
 ```
 
 Чтобы заполнить базу данных начальными данными списка ингридиетов, а также тегами выполните:
 ```python
-docker-compose exec backend python manage.py load_ingredients
-docker-compose exec backend python manage.py load_tags
+sudo docker-compose exec backend python manage.py load_ingredients
+sudo docker-compose exec backend python manage.py load_tags
 ```
 Теперь можно зайти в админку _http://<ваш хост>/admin/_ под вашим логином администратора.
 
@@ -151,7 +150,7 @@ docker-compose exec backend python manage.py load_tags
 
 ## Сайт
 ```python
-http://51.250.65.73
+http://51.250.65.73/
 ```
 
 

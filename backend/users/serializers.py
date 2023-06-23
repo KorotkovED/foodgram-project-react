@@ -1,7 +1,9 @@
 from .models import User, Subscribtion
-from djoser.serializers import UserSerializer, UserCreateSerializer
+from djoser.serializers import UserCreateSerializer
 from rest_framework import serializers, validators
-from recipe.serializers import RecipeSerializer
+# from recipe.serializers import RecipeSerializer
+from recipe.models import Recipe
+from rest_framework.validators import UniqueTogetherValidator
 
 
 class UserRegistrationSerializer(UserCreateSerializer):
@@ -17,7 +19,7 @@ class UserRegistrationSerializer(UserCreateSerializer):
                   'password']
 
 
-class CustomUserSerializer(UserSerializer):
+class CustomUserSerializer(serializers.ModelSerializer):
     """Сериализатор для пользователя."""
 
     username = serializers.CharField(
@@ -49,8 +51,8 @@ class CustomUserSerializer(UserSerializer):
 class SubscribtionSerializer(serializers.ModelSerializer):
     """Сериализатор для подписок."""
 
-    is_sub = serializers.SerializerMethodField(read_only=True)
-    recipe = serializers.SerializerMethodField(read_only=True)
+    is_subscribed = serializers.SerializerMethodField(read_only=True)
+    recipes = serializers.SerializerMethodField(read_only=True)
     recipes_count = serializers.SerializerMethodField(read_only=True)
 
     class Meta:
@@ -60,11 +62,11 @@ class SubscribtionSerializer(serializers.ModelSerializer):
                   'id',
                   'first_name',
                   'last_name',
-                  'is_sub',
-                  'recipe',
+                  'is_subscribed',
+                  'recipes',
                   'recipes_count']
 
-    def get_is_sub(self, obj):
+    def get_is_subscribed(self, obj):
         """Проверка подписки на автора."""
         user = self.context.get('request').user
         if not user:
@@ -77,8 +79,50 @@ class SubscribtionSerializer(serializers.ModelSerializer):
             obj.recipes.all()[:int(recipes_limit)]
             if recipes_limit else obj.recipes
         )
-        serializer = serializers.ListSerializer(child=RecipeSerializer())
-        return serializer.to_representation(recipes)
+        return FavoriteShoppingSerializer(recipes, many=True).data
 
-    def get_recipes_count(obj):
+    def get_recipes_count(self, obj):
         return obj.recipes.count()
+
+
+class FavoriteShoppingSerializer(serializers.ModelSerializer):
+    """
+    Сериализатор для сериализации рецептов, находящися в списке
+    избранного и списке покупок.
+    """
+
+    class Meta:
+        model = Recipe
+        fields = (
+            'id',
+            'name',
+            'image',
+            'cooking_time'
+        )
+        read_only_fields = (
+            'name',
+            'image',
+            'cooking_time'
+        )
+
+
+class SubscriptionCreateSerializer(serializers.ModelSerializer):
+    """Сериализатор для создания подписки на автора."""
+
+    class Meta:
+        model = Subscribtion
+        fields = '__all__'
+
+        validators = [
+            UniqueTogetherValidator(
+                queryset=Subscribtion.objects.all(),
+                fields=('user', 'author'),
+                message='Вы уже подписаны на этого пользователя.'
+            )
+        ]
+
+    def validate(self, data):
+        if data['user'] == data['author']:
+            raise serializers.ValidationError(
+                'Вы не можете подписаться на самого себя.')
+        return data

@@ -63,8 +63,8 @@ jobs:
           key: ${{ secrets.SSH_KEY }}
           passphrase: ${{ secrets.PASSPHRASE }}
           script: |
-            sudo docker pull korotkoved/foodgram_backend
-            sudo docker pull korotkoved/foodgram_frontend 
+            sudo docker pull korotkoved/backend:v4
+            sudo docker pull korotkoved/foodgram_frontend:v1
             sudo docker-compose down --volumes
             sudo docker-compose stop
             sudo docker-compose rm backend
@@ -78,10 +78,10 @@ jobs:
             echo DB_HOST=${{ secrets.DB_HOST }} >> .env
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             sudo docker-compose up -d
-            sudo docker-compose exec web python manage.py makemigrations users
-            sudo docker-compose exec web python manage.py makemigrations recipes
-            sudo docker-compose exec -T web python manage.py migrate --noinput
-            sudo docker-compose exec -T web python manage.py collectstatic --no-input
+            sudo docker-compose exec backend python manage.py makemigrations users
+            sudo docker-compose exec backend python manage.py makemigrations recipe
+            sudo docker-compose exec -T backend python manage.py migrate 
+            sudo docker-compose exec -T backend python manage.py collectstatic 
             
   send_message:
     runs-on: ubuntu-latest

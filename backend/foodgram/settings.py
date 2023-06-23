@@ -23,10 +23,10 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = os.getenv('SECRET_KEY')
+SECRET_KEY = os.getenv('SECRET_KEY', default='django-insecure-xla(5n*ydnc-c@d8cvy+g*wt+corgrp*ip$qndp6_&n!gyum(1')
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
 ALLOWED_HOSTS = ['51.250.65.73', 'localhost', '127.0.0.1']
 
@@ -84,17 +84,17 @@ WSGI_APPLICATION = 'foodgram.wsgi.application'
 if DEBUG:
     DATABASES = {'default': {'ENGINE': 'django.db.backends.sqlite3',
                              'NAME': os.path.join(BASE_DIR, 'db.sqlite3')}}
-# else:
-# DATABASES = {
-#     'default': {
-#         'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
-#         'NAME': os.getenv('DB_NAME'),
-#         'USER': os.getenv('POSTGRES_USER'),
-#         'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
-#         'HOST': os.getenv('DB_HOST', default='localhost'),
-#         'PORT': os.getenv('DB_PORT')
-#     }
-# }
+else:
+    DATABASES = {
+        'default': {
+            'ENGINE': os.getenv('DB_ENGINE', 'django.db.backends.postgresql'),
+            'NAME': os.getenv('DB_NAME'),
+            'USER': os.getenv('POSTGRES_USER'),
+            'PASSWORD': os.getenv('POSTGRES_PASSWORD'),
+            'HOST': os.getenv('DB_HOST', default='localhost'),
+            'PORT': os.getenv('DB_PORT')
+        }
+    }
 
 
 # Password validation
@@ -171,6 +171,6 @@ DJOSER = {
     },
     'PERMISSIONS': {
         'user': ['rest_framework.permissions.AllowAny'],
-        # 'user_list': ['rest_framework.permissions.AllowAny'],
+        'user_list': ['rest_framework.permissions.AllowAny'],
     },
 }

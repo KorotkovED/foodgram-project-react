@@ -10,7 +10,7 @@ services:
     env_file:
       - ./.env
   backend:
-    image: korotkoved/foodgram_backend:v1
+    image: korotkoved/backend:v4
     restart: always
     volumes:
       - static_value:/app/static/

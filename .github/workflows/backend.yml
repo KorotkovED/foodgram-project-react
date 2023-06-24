@@ -22,7 +22,7 @@ jobs:
         with:
           push: true
           context: backend
-          tags: korotkoved/foodgram_backend:v4
+          tags: korotkoved/backend:v4
           
   build_frontend:
     name: Push Docker frontend image to Docker Hub
@@ -42,7 +42,7 @@ jobs:
         with:
           push: true
           context: frontend
-          tags: korotkoved/foodgram_frontend:latest
+          tags: korotkoved/foodgram_frontend:v1
       
   deploy:
     runs-on: ubuntu-latest
@@ -75,9 +75,9 @@ jobs:
             echo DB_PORT=${{ secrets.DB_PORT }} >> .env
             sudo docker-compose stop
             sudo docker-compose up -d --build
-            sudo docker-compose exec -T web python manage.py makemigrations
-            sudo docker-compose exec -T web python manage.py migrate 
-            sudo docker-compose exec -T web python manage.py collectstatic 
+            sudo docker-compose exec -T backend python manage.py makemigrations
+            sudo docker-compose exec -T backend python manage.py migrate 
+            sudo docker-compose exec -T backend python manage.py collectstatic 
             
   send_message:
     runs-on: ubuntu-latest

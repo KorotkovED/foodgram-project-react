@@ -1,17 +1,12 @@
-from django.shortcuts import get_object_or_404
-from .models import User, Subscribtion
 from rest_framework.response import Response
-from rest_framework import status, permissions, serializers
+from rest_framework import status, serializers
 from .serializers import (SubscribtionSerializer,
                           CustomUserSerializer,
                           SubscriptionCreateSerializer)
-# from django.http import HttpResponse
-# from rest_framework.decorators import api_view, permission_classes
 from .pagination import LimitPageNumerPagination
 from djoser.views import UserViewSet
 from rest_framework.decorators import action
-# from rest_framework.pagination import PageNumberPagination
-# from rest_framework.serializers import ListSerializer
+from .models import User
 
 
 class UserViewSet(UserViewSet):

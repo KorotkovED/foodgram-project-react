@@ -151,6 +151,11 @@ sudo docker-compose exec backend python manage.py load_tags
 ## Сайт
 ```python
 http://51.250.65.73/
+
+Данные от суперпользователя:
+
+login: admin1234
+password: admin154515
 ```
 
 

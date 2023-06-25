@@ -9,8 +9,8 @@ services:
       - postgres_data:/var/lib/postgresql/data/
     env_file:
       - ./.env
-    ports:
-      - "5432:5432"
+    # ports:
+    #   - "5432:5432"
   backend:
     image: korotkoved/backend:v4
     restart: always

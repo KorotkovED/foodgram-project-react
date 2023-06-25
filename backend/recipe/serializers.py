@@ -84,13 +84,35 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
         tags_list = validated_data.pop('tags')
         ingredient_list = validated_data.pop('ingredients')
         recipe = Recipe.objects.create(**validated_data)
+        existing_ingredients = {}
+
         for item in ingredient_list:
-            ingredient = Ingredients.objects.get(id=item['id'])
-            IngredientsInRecipe.objects.create(
-                ingredient=ingredient,
-                recipe=recipe,
-                amount=item['amount']
-            )
+            ingredient = get_object_or_404(Ingredients, id=item.get('id'))
+            amount = item['amount']
+
+            if ingredient.id in existing_ingredients:
+                amount_ex = existing_ingredients[ingredient.id]
+                IngredientsInRecipe.objects.filter(
+                    ingredient=ingredient,
+                    recipe=recipe,
+                    amount=amount_ex
+                ).delete()
+
+                IngredientsInRecipe.objects.create(
+                    ingredient=ingredient,
+                    recipe=recipe,
+                    amount=amount + amount_ex
+                )
+                existing_ingredients[ingredient.id] = amount
+            else:
+
+                IngredientsInRecipe.objects.create(
+                    ingredient=ingredient,
+                    recipe=recipe,
+                    amount=amount
+                )
+            existing_ingredients[ingredient.id] = amount
+
         for item in tags_list:
             TagsRecipe.objects.create(
                 tag=item,
@@ -107,15 +129,30 @@ class RecipeCreateSerializer(serializers.ModelSerializer):
 
         tags_list = validated_data.pop('tags')
         instance.tags.set(tags_list)
-
+        existing_ingredients = {}
         ingredient_list = validated_data.pop('ingredients')
         instance.ingredients.clear()
         for item in ingredient_list:
             ingredient = get_object_or_404(Ingredients, id=item.get('id'))
-            instance.ingredients.add(
-                ingredient,
-                through_defaults={'amount': item.get('amount')}
-            )
+            amount = item['amount']
+
+            if ingredient.id in existing_ingredients:
+                amount_ex = existing_ingredients[ingredient.id]
+
+                instance.ingredients.remove(ingredient)
+
+                instance.ingredients.add(
+                    ingredient,
+                    through_defaults={'amount': (amount_ex + amount)}
+                )
+
+                existing_ingredients[ingredient.id] = amount + amount_ex
+            else:
+                instance.ingredients.add(
+                    ingredient,
+                    through_defaults={'amount': amount}
+                )
+                existing_ingredients[ingredient.id] = amount
 
         instance.save()
         return instance
